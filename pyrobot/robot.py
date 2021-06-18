@@ -1,7 +1,8 @@
 import pandas as pdb
 
 from td.client import TDClient
-from td.utils import milliseconds_since_epoch
+from td.utils import TDUtilities
+milliseconds_since_epoch = TDUtilities().milliseconds_since_epoch
 
 from datetime import datetime
 from datetime import time
@@ -34,7 +35,11 @@ class PyRobot():
         self.stock_frame = None
 
     def _create_session(self) -> TDClient:
+        """[summary]
 
+        Returns:
+            TDClient: [description]
+        """
         td_client = TDClient(
             client_id=self.client_id,
             redirect_uri=self.redirect_uri,
@@ -48,10 +53,14 @@ class PyRobot():
 
     @property
     def pre_market_open(self) -> bool:
-        
-        pre_market_start_time = datetime.now().replace(hour=12, minute=00, second=00,tzinfo=timezone.utc).timestamp()
-        market_start_time = datetime.now().replace(hour=13, minute=30, second=00,tzinfo=timezone.utc).timestamp()
-        right_now = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
+        pre_market_start_time = datetime.utcnow().replace(hour=8, minute=00,second=00).timestamp()
+        market_start_time = datetime.utcnow().replace(hour=13, minute=30, second=00).timestamp()
+        right_now = datetime.utcnow().timestamp()
 
         if market_start_time >= right_now >= pre_market_start_time:
             return True
@@ -60,10 +69,24 @@ class PyRobot():
 
     @property
     def post_market_open(self) -> bool:
-        
-        post_market_end_time = datetime.now().replace(hour=22, minute=30, second=00,tzinfo=timezone.utc).timestamp()
-        market_end_time = datetime.now().replace(hour=20, minute=00, second=00,tzinfo=timezone.utc).timestamp()
-        right_now = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
+        post_market_end_time = datetime.utcnow().replace(
+            hour=00,
+            minute=00,
+            second=00
+        ).timestamp()
+
+        market_end_time = datetime.utcnow().replace(
+            hour=20,
+            minute=00,
+            second=00
+        ).timestamp()
+
+        right_now = datetime.utcnow().timestamp()
 
         if post_market_end_time >= right_now >= market_end_time:
             return True
@@ -72,10 +95,24 @@ class PyRobot():
 
     @property
     def regular_market_open(self) -> bool:
-        
-        market_start_time = datetime.now().replace(hour=13, minute=30, second=00,tzinfo=timezone.utc).timestamp()
-        market_end_time = datetime.now().replace(hour=20, minute=00, second=00,tzinfo=timezone.utc).timestamp()
-        right_now = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
+        market_start_time = datetime.utcnow().replace(
+            hour=13,
+            minute=30,
+            second=00
+        ).timestamp()
+
+        market_end_time = datetime.utcnow().replace(
+            hour=20,
+            minute=00,
+            second=00
+        ).timestamp()
+
+        right_now = datetime.utcnow().timestamp()
 
         if market_end_time >= right_now >= market_start_time:
             return True
